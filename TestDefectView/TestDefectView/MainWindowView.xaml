@@ -23,8 +23,8 @@
         
         <DataTemplate x:Key="DefectListItemDataTemplate">
             <StackPanel x:Name="spDefectListItem" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0">
-                <CheckBox x:Name="cbIsVisible" Margin="5,0,5,0" VerticalAlignment="Center" IsChecked="True"
-                      Click="CbIsVisible_Click"/>
+                <CheckBox x:Name="cbIsVisible" Margin="5,0,5,0" VerticalAlignment="Center" IsChecked="{Binding IsChecked}"
+                      Click="CheckDefectItem"/>
                 <Image x:Name="imgDefectTypeIcon" VerticalAlignment="Center" 
                    Width="{Binding IconWidth}" Height="{Binding IconHeight}" Source="{Binding Type,Converter={StaticResource cvtIconFileName}}"/>
                 <Button x:Name="btnDefectName" MinWidth="60" Height="auto" FontSize="14" Margin="5,0,5,0" BorderThickness="0"
