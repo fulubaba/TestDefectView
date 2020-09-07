@@ -7,55 +7,61 @@
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         xmlns:vm="clr-namespace:TestDefectView.ViewModel"
         xmlns:uc="clr-namespace:TestDefectView.UserControls"
+        xmlns:cvt="clr-namespace:TestDefectView.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="980" Width="1650">
+        Title="MainWindow" Height="980" Width="1650" Loaded="Window_Loaded">
 
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
 
     <Window.Resources>
+        <cvt:DefectTypeToIconFileNameConverter x:Key="cvtIconFileName"></cvt:DefectTypeToIconFileNameConverter>
+        <cvt:DefectTypeToNameConverter x:Key="cvtName"></cvt:DefectTypeToNameConverter>
+        <cvt:DefectTypeToNameForeColorConverter x:Key="cvtNameForeColor"></cvt:DefectTypeToNameForeColorConverter>
+        <cvt:DefectTypeToNumConverter x:Key="cvtNum"></cvt:DefectTypeToNumConverter>
+        
         <DataTemplate x:Key="DefectListItemDataTemplate">
-            <StackPanel x:Name="spDefectListItem" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <CheckBox x:Name="cbIsVisible" Margin="5,0,5,0" VerticalAlignment="Center" 
+            <StackPanel x:Name="spDefectListItem" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0">
+                <CheckBox x:Name="cbIsVisible" Margin="5,0,5,0" VerticalAlignment="Center" IsChecked="True"
                       Click="CbIsVisible_Click"/>
                 <Image x:Name="imgDefectTypeIcon" VerticalAlignment="Center" 
-                   Width="{Binding IconWidth}" Height="{Binding IconHeight}" Source="{Binding IconSource}"/>
-                <Button x:Name="btnDefectName" MinWidth="60" FontSize="14" Margin="5,0,5,0" BorderThickness="0"
+                   Width="{Binding IconWidth}" Height="{Binding IconHeight}" Source="{Binding Type,Converter={StaticResource cvtIconFileName}}"/>
+                <Button x:Name="btnDefectName" MinWidth="60" Height="auto" FontSize="14" Margin="5,0,5,0" BorderThickness="0"
                         HorizontalContentAlignment="Left" VerticalAlignment="Center" Background="Transparent"
-                        Content="{Binding DefectName}" Foreground="{Binding DefectColor}" Click="BtnDefectName_Click"/>
+                        Content="{Binding Type,Converter={StaticResource cvtName}}" 
+                        Foreground="{Binding Type,Converter={StaticResource cvtNameForeColor}}" Click="BtnDefectName_Click"/>
                 <TextBox x:Name="tbDefectNum" FontSize="13" Foreground="LightGray" 
                          VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
-                        Text="{Binding DefectNum}"/>
+                         Text="{Binding Type,Converter={StaticResource cvtNum}}"/>
             </StackPanel>
         </DataTemplate>
+        
         <Style x:Key="FormBorderStyle" TargetType="Border">
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="Red" />
             <Setter Property="Background" Value="#202122" />
         </Style>
-        <Style x:Key="TTTTTTTT" TargetType="ItemsControl">
+        <Style x:Key="DefectMapStyle" TargetType="ItemsControl">
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <Canvas />
+                        <Canvas/>
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding Left}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                        <Setter Property="Canvas.Left" Value="{Binding XPosition}" />
+                        <Setter Property="Canvas.Top" Value="{Binding YPosition}" />
                     </Style>
                 </Setter.Value>
             </Setter>
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate DataType="vm:MyItemViewModel">
-                        <Border Width="120" Height="30" Background="Red">
-                            <TextBlock Text="{Binding Name}" />
-                        </Border>
+                        <Image Width="13" Height="13" Source="{Binding Type, Converter={StaticResource cvtIconFileName}}" />
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
@@ -94,7 +100,9 @@
         <Border Grid.Column="1" Style="{StaticResource FormBorderStyle}">
             <!--缺陷地图-->
             <Grid x:Name="SubGridDefectMap">
-                <Canvas x:Name="DefectMap" ClipToBounds="False"/>
+                <Canvas x:Name="DefectMap" ClipToBounds="False">
+                    <ItemsControl ItemsSource="{Binding DefectItems}" Style="{StaticResource DefectMapStyle}"/>
+                </Canvas>
             </Grid>
         </Border>
         <Border Grid.Column="2" Style="{StaticResource FormBorderStyle}">
@@ -123,16 +131,16 @@
                         <StackPanel Grid.Column="0" Name="DefectPicMove" Orientation="Horizontal">
                             <Button Name="LastPicBtn" Content="←" Width="35" Height="30" FontSize="20" Foreground="LightGray" Background="Black" Margin="10,10,4,10" BorderThickness="2,2,2,2" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                                 <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click" >
+                                    <!--<i:EventTrigger EventName="Click" >
                                         <cmd:EventToCommand Command="{Binding BtnClickCommand}" CommandParameter="LAST_PIC"></cmd:EventToCommand>
-                                    </i:EventTrigger>
+                                    </i:EventTrigger>-->
                                 </i:Interaction.Triggers>
                             </Button>
                             <Button Name="NextPicBtn" Content="→" Width="35" Height="30" FontSize="20" Foreground="LightGray" Background="Black" Margin="4,10,10,10" BorderThickness="2,2,2,2" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                                 <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click" >
-                                        <cmd:EventToCommand Command="{Binding BtnClickCommand}" CommandParameter="NEXT_PIC"></cmd:EventToCommand>
-                                    </i:EventTrigger>
+                                    <!--<i:EventTrigger EventName="Click" >-->
+                                        <!--<cmd:EventToCommand Command="{Binding BtnClickCommand}" CommandParameter="NEXT_PIC"></cmd:EventToCommand>-->
+                                    <!--</i:EventTrigger>-->
                                 </i:Interaction.Triggers>
                             </Button>
                         </StackPanel>
