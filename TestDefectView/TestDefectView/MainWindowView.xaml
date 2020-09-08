@@ -14,7 +14,13 @@
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
-
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadDataCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Window.Resources>
         <cvt:DefectTypeToIconFileNameConverter x:Key="cvtIconFileName"></cvt:DefectTypeToIconFileNameConverter>
         <cvt:DefectTypeToNameConverter x:Key="cvtName"></cvt:DefectTypeToNameConverter>
@@ -23,14 +29,14 @@
         
         <DataTemplate x:Key="DefectListItemDataTemplate">
             <StackPanel x:Name="spDefectListItem" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,5,0,0">
-                <CheckBox x:Name="cbIsVisible" Margin="5,0,5,0" VerticalAlignment="Center" IsChecked="{Binding IsChecked}"
-                      Click="CheckDefectItem"/>
+                <CheckBox x:Name="cbIsVisible" Margin="5,0,5,0" VerticalAlignment="Center" IsChecked="{Binding DefectItem.IsChecked}"
+                      />
                 <Image x:Name="imgDefectTypeIcon" VerticalAlignment="Center" 
                    Width="{Binding IconWidth}" Height="{Binding IconHeight}" Source="{Binding Type,Converter={StaticResource cvtIconFileName}}"/>
                 <Button x:Name="btnDefectName" MinWidth="60" Height="auto" FontSize="14" Margin="5,0,5,0" BorderThickness="0"
                         HorizontalContentAlignment="Left" VerticalAlignment="Center" Background="Transparent"
                         Content="{Binding Type,Converter={StaticResource cvtName}}" 
-                        Foreground="{Binding Type,Converter={StaticResource cvtNameForeColor}}" Click="BtnDefectName_Click"/>
+                        Foreground="{Binding Type,Converter={StaticResource cvtNameForeColor}}"/>
                 <TextBox x:Name="tbDefectNum" FontSize="13" Foreground="LightGray" 
                          VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
                          Text="{Binding Type,Converter={StaticResource cvtNum}}"/>
@@ -61,7 +67,10 @@
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate DataType="vm:MyItemViewModel">
-                        <Image Width="13" Height="13" Source="{Binding Type, Converter={StaticResource cvtIconFileName}}" />
+                        <Image Width="13" Height="13" 
+                               Source="{Binding Type, Converter={StaticResource cvtIconFileName}}"
+                               Visibility="{Binding DefectItemVisibility}"
+                               />
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
@@ -82,7 +91,7 @@
                         <TextBlock Text="Defect List: " FontSize="15" Foreground="LightGray" Margin="5,0,0,0"/>
                     </StackPanel>
                     <StackPanel x:Name="spSelectAll" Margin="10,5,0,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
-                        <CheckBox IsChecked="True" VerticalAlignment="Center" FontSize="15" Foreground="LightGray" Margin="5,0,5,0" Click="CheckBox_Click"/>
+                        <CheckBox IsChecked="{Binding IsAllChecked}" VerticalAlignment="Center" FontSize="15" Foreground="LightGray" Margin="5,0,5,0"/>
                         <TextBlock Text="Select All" FontSize="15" Foreground="LightGray" Margin="5,0,0,0"/>
                     </StackPanel>
                     <StackPanel x:Name="spDefectList" Margin="10,5,0,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
